@@ -7,7 +7,7 @@ const LEAVES_BG =
 function Spinner() {
     return (
         <svg
-            className="animate-spin h-5 w-5 text-white"
+            className="animate-spin h-5 w-5 text-teal-600"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
@@ -20,7 +20,7 @@ function Spinner() {
 
 function Toast({ message, type }) {
     if (!message) return null
-    const colors = type === "success" ? "bg-green-600 text-white" : "bg-red-600 text-white"
+    const colors = type === "success" ? "bg-teal-600 text-white" : "bg-red-600 text-white"
     return (
         <div className={`fixed top-5 right-5 z-50 flex items-center gap-3 px-5 py-3 rounded-lg shadow-xl text-sm font-medium ${colors}`}>
             {type === "success" ? "✓" : "✕"} {message}
@@ -39,6 +39,7 @@ export default function RegisterPage() {
     const [errors, setErrors] = useState({})
     const [loading, setLoading] = useState(false)
     const [toast, setToast] = useState({ message: "", type: "" })
+    const [role, setRole] = useState("user")
 
     function showToast(message, type = "error") {
         setToast({ message, type })
@@ -76,8 +77,8 @@ export default function RegisterPage() {
     }
 
     const inputBase =
-        "w-full bg-transparent border-0 border-b pb-2 text-white text-sm placeholder:text-[#6b7280] outline-none transition-colors duration-200"
-    const inputNormal = `${inputBase} border-[#4b5563] focus:border-[#d1d5db]`
+        "w-full bg-transparent border-0 border-b pb-2 text-gray-800 text-sm placeholder:text-gray-400 outline-none transition-colors duration-200"
+    const inputNormal = `${inputBase} border-gray-300 focus:border-teal-500`
     const inputError = `${inputBase} border-red-500 focus:border-red-400`
 
     return (
@@ -93,21 +94,54 @@ export default function RegisterPage() {
                 />
 
                 {/* ── Right: register form ── */}
-                <div className="flex flex-col justify-center w-full md:w-1/2 px-10 lg:px-20 py-16 bg-[#1a1a1a]">
+                <div className="flex flex-col justify-center w-full md:w-1/2 px-10 lg:px-20 py-16 bg-white">
                     <div className="w-full max-w-sm mx-auto">
 
-                        <h1 className="text-4xl font-bold text-white mb-1 tracking-tight">
+                        <h1 className="text-4xl font-bold text-gray-900 mb-8 tracking-tight">
                             Create account
                         </h1>
-                        <p className="text-[#9ca3af] text-sm mb-10">
-                            Fill in the details below to get started.
-                        </p>
+
+                        {/* Role Selector with Sliding Color */}
+                        <div className="relative mb-8 flex gap-3 h-11">
+                            {/* Sliding teal background */}
+                            <div
+                                className={`absolute top-0 bottom-0 w-1/2 rounded-lg bg-teal-600 transition-all duration-500 ease-in-out ${
+                                    role === "user" ? "left-0" : "left-1/2"
+                                }`}
+                            />
+                            {/* User Button */}
+                            <button
+                                type="button"
+                                onClick={() => setRole("user")}
+                                disabled={loading}
+                                className={`relative flex-1 py-2.5 px-4 rounded-lg font-semibold text-sm transition-colors duration-500 ease-in-out ${
+                                    role === "user"
+                                        ? "text-white"
+                                        : "text-gray-700 hover:text-gray-900"
+                                } disabled:opacity-50 disabled:cursor-not-allowed`}
+                            >
+                                User
+                            </button>
+                            {/* Admin Button */}
+                            <button
+                                type="button"
+                                onClick={() => setRole("admin")}
+                                disabled={loading}
+                                className={`relative flex-1 py-2.5 px-4 rounded-lg font-semibold text-sm transition-colors duration-500 ease-in-out ${
+                                    role === "admin"
+                                        ? "text-white"
+                                        : "text-gray-700 hover:text-gray-900"
+                                } disabled:opacity-50 disabled:cursor-not-allowed`}
+                            >
+                                Admin
+                            </button>
+                        </div>
 
                         <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-6">
 
                             {/* Full Name */}
                             <div className="flex flex-col">
-                                <label htmlFor="name" className="text-sm font-medium text-[#e5e7eb] mb-2">
+                                <label htmlFor="name" className="text-sm font-medium text-gray-700 mb-2">
                                     Full Name
                                 </label>
                                 <input
@@ -125,7 +159,7 @@ export default function RegisterPage() {
 
                             {/* E-mail */}
                             <div className="flex flex-col">
-                                <label htmlFor="reg-email" className="text-sm font-medium text-[#e5e7eb] mb-2">
+                                <label htmlFor="reg-email" className="text-sm font-medium text-gray-700 mb-2">
                                     E-mail
                                 </label>
                                 <input
@@ -143,7 +177,7 @@ export default function RegisterPage() {
 
                             {/* Password */}
                             <div className="flex flex-col">
-                                <label htmlFor="reg-password" className="text-sm font-medium text-[#e5e7eb] mb-2">
+                                <label htmlFor="reg-password" className="text-sm font-medium text-gray-700 mb-2">
                                     Password
                                 </label>
                                 <input
@@ -161,7 +195,7 @@ export default function RegisterPage() {
 
                             {/* Confirm Password */}
                             <div className="flex flex-col">
-                                <label htmlFor="confirm" className="text-sm font-medium text-[#e5e7eb] mb-2">
+                                <label htmlFor="confirm" className="text-sm font-medium text-gray-700 mb-2">
                                     Confirm Password
                                 </label>
                                 <input
@@ -181,7 +215,7 @@ export default function RegisterPage() {
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="w-full h-12 rounded-lg bg-black hover:bg-zinc-800 active:scale-[0.98] active:bg-zinc-900 text-white font-semibold text-base transition-all duration-150 mt-1 border border-[#333] disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
+                                className="w-full h-12 rounded-lg bg-teal-600 hover:bg-teal-700 active:scale-[0.98] active:bg-teal-800 text-white font-semibold text-base transition-all duration-150 mt-1 border border-teal-600 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
                             >
                                 {loading ? (
                                     <>
@@ -194,12 +228,12 @@ export default function RegisterPage() {
                             </button>
 
                             {/* Back to login */}
-                            <p className="text-center text-sm text-[#6b7280]">
+                            <p className="text-center text-sm text-gray-600">
                                 Already have an account?{" "}
                                 <button
                                     type="button"
                                     onClick={() => navigate("/login")}
-                                    className="text-white font-semibold hover:underline active:scale-95 transition-all duration-150 cursor-pointer"
+                                    className="text-teal-600 font-semibold hover:text-teal-700 active:scale-95 transition-all duration-150 cursor-pointer"
                                 >
                                     Login here
                                 </button>
