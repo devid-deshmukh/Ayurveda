@@ -8,7 +8,7 @@ const LEAVES_BG =
 function Spinner() {
     return (
         <svg
-            className="animate-spin h-5 w-5 text-white"
+            className="animate-spin h-5 w-5 text-teal-600"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
@@ -32,7 +32,7 @@ function Toast({ message, type }) {
     if (!message) return null
     const colors =
         type === "success"
-            ? "bg-green-600 text-white"
+            ? "bg-teal-600 text-white"
             : "bg-red-600 text-white"
     return (
         <div
@@ -57,6 +57,7 @@ export default function LoginPage() {
     const [loading, setLoading] = useState(false)
     const [toast, setToast] = useState({ message: "", type: "" })
     const [showPass, setShowPass] = useState(false)
+    const [role, setRole] = useState("user")
 
     function showToast(message, type = "error") {
         setToast({ message, type })
@@ -92,8 +93,8 @@ export default function LoginPage() {
     }
 
     const inputBase =
-        "w-full bg-transparent border-0 border-b pb-2 text-white text-sm placeholder:text-[#6b7280] outline-none transition-colors duration-200"
-    const inputNormal = `${inputBase} border-[#4b5563] focus:border-[#d1d5db]`
+        "w-full bg-transparent border-0 border-b pb-2 text-gray-800 text-sm placeholder:text-gray-400 outline-none transition-colors duration-200"
+    const inputNormal = `${inputBase} border-gray-300 focus:border-teal-500`
     const inputError = `${inputBase} border-red-500 focus:border-red-400`
 
     return (
@@ -109,21 +110,54 @@ export default function LoginPage() {
                 />
 
                 {/* ── Right: form panel ── */}
-                <div className="flex flex-col justify-center w-full md:w-1/2 px-10 lg:px-20 py-16 bg-[#1a1a1a]">
+                <div className="flex flex-col justify-center w-full md:w-1/2 px-10 lg:px-20 py-16 bg-white">
                     <div className="w-full max-w-sm mx-auto">
 
-                        <h1 className="text-4xl font-bold text-white mb-1 tracking-tight">
+                        <h1 className="text-4xl font-bold text-gray-900 mb-8 tracking-tight">
                             Welcome back
                         </h1>
-                        <p className="text-[#9ca3af] text-sm mb-10">
-                            Please enter your details.
-                        </p>
+
+                        {/* Role Selector with Sliding Color */}
+                        <div className="relative mb-8 flex gap-3 h-11">
+                            {/* Sliding teal background */}
+                            <div
+                                className={`absolute top-0 bottom-0 w-1/2 rounded-lg bg-teal-600 transition-all duration-500 ease-in-out ${
+                                    role === "user" ? "left-0" : "left-1/2"
+                                }`}
+                            />
+                            {/* User Button */}
+                            <button
+                                type="button"
+                                onClick={() => setRole("user")}
+                                disabled={loading}
+                                className={`relative flex-1 py-2.5 px-4 rounded-lg font-semibold text-sm transition-colors duration-500 ease-in-out ${
+                                    role === "user"
+                                        ? "text-white"
+                                        : "text-gray-700 hover:text-gray-900"
+                                } disabled:opacity-50 disabled:cursor-not-allowed`}
+                            >
+                                User
+                            </button>
+                            {/* Admin Button */}
+                            <button
+                                type="button"
+                                onClick={() => setRole("admin")}
+                                disabled={loading}
+                                className={`relative flex-1 py-2.5 px-4 rounded-lg font-semibold text-sm transition-colors duration-500 ease-in-out ${
+                                    role === "admin"
+                                        ? "text-white"
+                                        : "text-gray-700 hover:text-gray-900"
+                                } disabled:opacity-50 disabled:cursor-not-allowed`}
+                            >
+                                Admin
+                            </button>
+                        </div>
 
                         <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-6">
 
                             {/* E-mail */}
                             <div className="flex flex-col">
-                                <label htmlFor="email" className="text-sm font-medium text-[#e5e7eb] mb-2">
+                                <label htmlFor="email" className="text-sm font-medium text-gray-700 mb-2">
                                     E-mail
                                 </label>
                                 <input
@@ -141,7 +175,7 @@ export default function LoginPage() {
 
                             {/* Password */}
                             <div className="flex flex-col">
-                                <label htmlFor="password" className="text-sm font-medium text-[#e5e7eb] mb-2">
+                                <label htmlFor="password" className="text-sm font-medium text-gray-700 mb-2">
                                     Password
                                 </label>
                                 <div className="relative">
@@ -160,7 +194,7 @@ export default function LoginPage() {
                                         type="button"
                                         tabIndex={-1}
                                         onClick={() => setShowPass((s) => !s)}
-                                        className="absolute right-0 bottom-2.5 text-[#6b7280] hover:text-[#d1d5db] transition-colors text-xs select-none"
+                                        className="absolute right-0 bottom-2.5 text-gray-500 hover:text-gray-700 transition-colors text-xs select-none"
                                         aria-label={showPass ? "Hide password" : "Show password"}
                                     >
                                         {showPass ? "Hide" : "Show"}
@@ -171,21 +205,21 @@ export default function LoginPage() {
 
                             {/* Remember me + Forgot password */}
                             <div className="flex items-center justify-between">
-                                <label className="flex items-center gap-2 text-sm text-[#d1d5db] cursor-pointer select-none group">
+                                <label className="flex items-center gap-2 text-sm text-gray-700 cursor-pointer select-none group">
                                     <input
                                         type="checkbox"
                                         id="remember"
                                         checked={rememberMe}
                                         onChange={(e) => setRememberMe(e.target.checked)}
                                         disabled={loading}
-                                        className="w-3.5 h-3.5 rounded-sm border border-[#6b7280] bg-transparent accent-white cursor-pointer"
+                                        className="w-3.5 h-3.5 rounded-sm border border-gray-300 bg-white accent-teal-600 cursor-pointer"
                                     />
-                                    <span className="group-hover:text-white transition-colors">Remember me</span>
+                                    <span className="group-hover:text-gray-900 transition-colors">Remember me</span>
                                 </label>
                                 <button
                                     type="button"
                                     onClick={() => navigate("/forgot-password")}
-                                    className="text-sm text-[#d1d5db] font-semibold hover:text-white active:scale-95 transition-all duration-150"
+                                    className="text-sm text-gray-600 font-semibold hover:text-gray-900 active:scale-95 transition-all duration-150"
                                 >
                                     Forgot your password?
                                 </button>
@@ -195,7 +229,7 @@ export default function LoginPage() {
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="w-full h-12 rounded-lg bg-black hover:bg-zinc-800 active:scale-[0.98] active:bg-zinc-900 text-white font-semibold text-base transition-all duration-150 mt-1 border border-[#333] disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
+                                className="w-full h-12 rounded-lg bg-teal-600 hover:bg-teal-700 active:scale-[0.98] active:bg-teal-800 text-white font-semibold text-base transition-all duration-150 mt-1 border border-teal-600 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
                             >
                                 {loading ? (
                                     <>
@@ -208,12 +242,12 @@ export default function LoginPage() {
                             </button>
 
                             {/* Register */}
-                            <p className="text-center text-sm text-[#6b7280]">
+                            <p className="text-center text-sm text-gray-600">
                                 Don&apos;t have an account?{" "}
                                 <button
                                     type="button"
                                     onClick={() => navigate("/register")}
-                                    className="text-white font-semibold hover:underline active:scale-95 transition-all duration-150 cursor-pointer"
+                                    className="text-teal-600 font-semibold hover:text-teal-700 active:scale-95 transition-all duration-150 cursor-pointer"
                                 >
                                     Register here
                                 </button>
